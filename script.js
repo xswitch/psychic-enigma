@@ -1,3 +1,42 @@
+function addChoiceButtons() {
+    const buttons = document.querySelectorAll(`button`);
+    buttons.forEach((button) => {
+        button.addEventListener(`click`, () => {
+            game(button);
+        });
+    });
+}
+
+function game(button) {
+    const roundResult = document.querySelector(`.round-result`);
+    const playerScore = document.querySelector(`.playerScore`);
+    const compScore = document.querySelector(`.compScore`);
+    const comp = compChoice();
+    const result = gameRound(button.id, comp);
+
+    switch (result) {
+        case `win`:
+            roundResult.textContent = `You win! You chose ${button.id}, and the computer chose ${comp}!`;
+            playerScore.textContent = parseInt(playerScore.textContent) + 1;
+            break;
+        case `loss`:
+            roundResult.textContent = `You Lose! You chose ${button.id}, and the computer chose ${comp}!`;
+            compScore.textContent = parseInt(compScore.textContent) + 1;
+            break;
+        case `tie`:
+            roundResult.textContent = `It's a tie! You chose ${button.id}, and the computer chose ${comp}!`;
+            break;
+        default:
+            break;
+    }
+
+    if (parseInt(playerScore.textContent) >= 5) {
+        roundResult.textContent = `YOU WIN! First to 5, congrats!`;
+    } else if (parseInt(compScore.textContent) >= 5) {
+        roundResult.textContent= `YOU LOSE! You lost to a computer.. sad`;
+    }
+}
+
 function compChoice() {
     const choiceArray = [`rock`, `paper`, `scissors`];
     return choiceArray[randomFloor(3)];
@@ -27,35 +66,4 @@ function gameRound(player, comp) {
     }
 }
 
-function game() {
-    let scorePlayer = 0;
-    let scoreComp = 0;
-    for(let round = 0; round < 5; round++) {
-        let comp = compChoice();
-        let player = prompt(`Pick rock, paper or scissors`).toLowerCase();
-        let result = gameRound(player, comp);
-
-        switch (result) {
-            case `win`:
-                scorePlayer++;
-                break;
-            case `loss`:
-                scoreComp++;
-                break;
-            case `tie`:
-                round--
-                break;
-            default:
-                round-- //Resets round if something other than what is allowed is entered.
-                break;
-        }
-        (!result) ? console.log(`You have to pick either, rock, paper or scissors!`) : 
-            (result === `tie`) ? console.log(`It's a tie, go again!`) : 
-            (result === `win`) ? console.log(`You win! ${player} beats ${comp}.`) :
-            console.log(`You lose! ${comp} beats ${player}.`);
-    }
-    (scorePlayer > scoreComp) ? console.log(`You win, you got ${scorePlayer} points. The computer got ${scoreComp}.`) : 
-        console.log(`You lose! You got ${scorePlayer} points. The computer got ${scoreComp}.`)
-}
-
-game();
+addChoiceButtons();
